@@ -26,7 +26,7 @@ void main(void) {
 
     WDTCTL = WDTPW | WDTHOLD;					// Stop watchdog timer
 
-    usciA1UartInit();
+    //usciA1UartInit();
 
 //    char voltmeterStr[30];
 //    double sineMeas[300] = {};
@@ -37,11 +37,14 @@ void main(void) {
     //PxSEL |= BIT0 + BIT1;
     P6SEL |= BIT0 + BIT1 + BIT2 + BIT3 + BIT4 + BIT5 + BIT6 + BIT7;
 
-    adc12Cfg("2V5", 1, 1, 0);
+    adc12Cfg("2V5", 0, 1, 0);
 
     __enable_interrupt();
 
-//    while(1){
+    while(1){
+        if( i > 200)
+            __disable_interrupt();                    // disable global interrupts
+    }
         //__delay_cycles(104800);            // 100ms delay
 
         //adc12SampSWConv();
