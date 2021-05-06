@@ -21,12 +21,18 @@
   * Date: 1/6/2021
   * Modified: <date of any mods> usually taken care of by rev control
   ***********************************************************************************/
-void timerA0Init(void){
+void timerA0Init(double freq, double nSamples){
 
         // clk select: SMCLK | input divider: 1 | mode control: continuous | clear clk | enable interrupts
         TA0CTL = TASSEL_2 | ID_0 | MC_1 | TACLR;
         // expansion clk divider to 1
         TA0EX0 |= TAIDEX_0;
+
+        double shiPeriod;
+
+        shiPeriod = 1048000/(freq*nSamples);
+
+        TA0CCR0 =  (int)shiPeriod + 1;
 
         TA0CCR1 = 1;
         // Capture on L->H & H->L: 11b | capture mode: 1b | Sync to SMCLK | choose CCI1A

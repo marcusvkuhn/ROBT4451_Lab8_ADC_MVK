@@ -30,7 +30,7 @@
 * Modified: April 23, 2021
 *
 ************************************************************************************/
-void adc12Cfg(const char * vref, char sampMode, char convTrigger, char adcChannel, double freq, double nSamples)	{
+void adc12Cfg(const char * vref, char sampMode, char convTrigger, char adcChannel)	{
 
 
     /*configure REF MODULE. 
