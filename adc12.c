@@ -70,13 +70,7 @@ void adc12Cfg(const char * vref, char sampMode, char convTrigger, char adcChanne
     } else
        	ADC12CTL1  &= ~ADC12SHP;					// pulse sampling sampling. SAMPCON will be controlled by ADC12SHT1x, ADC12SHT10x. Bits Not implemented here.
 
-    double shiPeriod;
-
-    shiPeriod = 1048000/(freq*nSamples);
-
-    TA0CCR0 =  (int)shiPeriod + 1;
-
-    ADC12CTL0 |= ADC12SHT0_0;
+    ADC12CTL0 |= ADC12SHT0_0;                       // 4 ADC12CLK cycles for sampling
 
     ADC12CTL0 |= ADC12ON;         					// ADC12 on
     ADC12CTL1 |= ADC12CONSEQ_2;      				// Repeated Single Channel
@@ -86,7 +80,7 @@ void adc12Cfg(const char * vref, char sampMode, char convTrigger, char adcChanne
     ADC12IE   |= BIT0;                         		// Enable interrupt
     ADC12CTL0 |= ADC12ENC;							// Enable Conversion
 
-    timerA0Init();
+    timerA0Init(100,100);
 
 }
 

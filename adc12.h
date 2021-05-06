@@ -16,7 +16,7 @@ int samples;
 
 #define SAMPLE_ADC 10000   // delay between ADC12SC H-->L
 
-void adc12Cfg(const char * vref, char sampMode, char convTrigger, char adcChannel, double freq, double nSamples);
+void adc12Cfg(const char * vref, char sampMode, char convTrigger, char adcChannel);
 void adc12SampSWConv(void);
 
 

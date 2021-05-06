@@ -37,7 +37,7 @@ void main(void) {
     //PxSEL |= BIT0 + BIT1;
     P6SEL |= BIT0 + BIT1 + BIT2 + BIT3 + BIT4 + BIT5 + BIT6 + BIT7;
 
-    adc12Cfg("2V5", 1, 1, 0, 100, 100);
+    adc12Cfg("2V5", 1, 1, 0);
 
     __enable_interrupt();
 
