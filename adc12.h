@@ -10,7 +10,9 @@
 #define ADC12_H_
 
 int adc12Result[300]; // public global variable declarations
-int i;
+int j;
+
+int writeDac;
 
 int samples;
 

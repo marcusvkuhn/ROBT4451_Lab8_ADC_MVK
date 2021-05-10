@@ -14,68 +14,70 @@
 
 #include <msp430.h> 
 
-#include "adc12.h"
+#include "usciSpi.h"
+#include "ucsControl.h"
+#include "mcp4921Dac.h"
 #include "usciUart.h"
-#include "stdio.h"
+#include "waveformGenerator.h"
+#include "timerA0.h"
+#include "adc12.h"
+
+
+#define dcoFreq 20							//MHz.
+#define sclkDiv 1							//SPI sclk divide. SCLK MAX to the DAC is 20MHz.
+											// sclkDiv will slow down transfer rate to DAC
+
+#define DAC_TST_WORD 0xBF8
 
 /*
  * main.c
  */
 
-void main(void) {
 
+
+unsigned char rxFlag = 0;
+int main(void) {
+
+	//unsigned int *address = (unsigned int*)0x2400;
+	unsigned char oscFail = 1;
+//	unsigned int dacWord = 0;
+
+	unsigned int dacCtrl = (~DAC_CFG_WR & ~DAC_CFG_BUF & (DAC_CFG_GA + DAC_CFG_SHDN)) & 0xF000;
+
+								// count direction
     WDTCTL = WDTPW | WDTHOLD;					// Stop watchdog timer
 
-    //usciA1UartInit();
+    /*********Set clock frequency*********************************************/
+    //unsigned char testPass = 1;
+    ucsSelSource(1,1,1,1);
+    oscFail = ucsDcoFreqSet (dcoFreq, 2, 1);			//set sclk to dcoFreq
+    if (oscFail)
+    	return 1;
+    /***End***Set clock frequency*********************************************/
 
-//    char voltmeterStr[30];
-//    double sineMeas[300] = {};
-//    int clrLenght;
-    i = 0;
-    //double measVolt = 0;
+    usciA0SpiInit(sclkDiv);
+    usciA1UartInit();
 
-    //PxSEL |= BIT0 + BIT1;
-    P6SEL |= BIT0 + BIT1 + BIT2 + BIT3 + BIT4 + BIT5 + BIT6 + BIT7;
+    initDac();
+
+    j = 0;
+
+    P6SEL |= BIT0;
 
     adc12Cfg("2V5", 0, 1, 0);
 
-    __enable_interrupt();
+    __enable_interrupt();                   // enable global device interrupts
 
     while(1){
-        if( i > 200)
-            __disable_interrupt();                    // disable global interrupts
+        if (j >= 200){
+            j = 0;
+        }
+        if(writeDac){
+            dacWriteWord(adc12Result[j], dacCtrl);
+            writeDac = 0;
+        }
     }
-        //__delay_cycles(104800);            // 100ms delay
 
-        //adc12SampSWConv();
-
-        //measVolt = (2.5*adc12Result)/4095;
-        //sineMeas[i] = (2.5*adc12Result[i])/4095;
-//        sumVolt = sumVolt + measVolt;
-        //sineMeas[i]
-
-//        if (i > 200){
-//            i = 0;
-//            __disable_interrupt();                  // disable global interrupts
-//        for(i = 0; i < 200; i++)
-//            sineMeas[i] = (2.5*adc12Result[i])/4095;
-//
-//        }
-//       i = 5;
-//        if (samples >= 15){
-//            measVolt = sumVolt/samples;
-//            sumVolt = 0;
-//            samples = 0;
-//            for (clrLenght = 40; clrLenght != 0; --clrLenght)
-//                usciA1UartTxChar(' ');                          // this loop clears the console
-//
-//            usciA1UartTxChar('\r');                         // returns to beginning of line
-//
-//            sprintf(voltmeterStr, "Voltage = %.4fV          ", sineMeas[i]);
-//            usciA1UartTxString(voltmeterStr);
-//        }
-//    }
-
-    //__disable_interrupt();					// disable global interrupts
-	//return 0;
+    __disable_interrupt();					// disable global interrupts
+	return 0;
 }

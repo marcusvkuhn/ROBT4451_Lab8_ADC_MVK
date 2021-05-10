@@ -14,7 +14,7 @@
 #define M_PI 3.14159
 #define N_GB 11.5
 
-void timerA0Init(double freq, double nSamples);
+void timerA0Init(double freq);
 
 long int speedCalc,
     numEdges,

@@ -1,7 +1,7 @@
 #include <msp430.h>
 
 #include "timerA0.h"
-
+#include "waveformGenerator.h"
 /*
  * timerA0.c
  *
@@ -21,20 +21,20 @@
   * Date: 1/6/2021
   * Modified: <date of any mods> usually taken care of by rev control
   ***********************************************************************************/
-void timerA0Init(double freq, double nSamples){
+void timerA0Init(double freq){
 
-        double shiPeriod;
+        int div;
 
         // clk select: SMCLK | input divider: 1 | mode control: continuous | clear clk | enable interrupts
         TA0CTL = TASSEL_2 | ID_0 | MC_1 | TACLR;
         // expansion clk divider to 1
         TA0EX0 |= TAIDEX_0;
 
-        shiPeriod = 1048000/(freq*nSamples);
+        div = 20000000/(freq);
 
-        TA0CCR0 =  (int)shiPeriod + 1;
+        TA0CCR0 =  (int)div + 1;
 
-        TA0CCR1 = 1;
+        TA0CCR1 = 10;
         // Capture on L->H & H->L: 11b | capture mode: 1b | Sync to SMCLK | choose CCI1A
         //TA0CCTL1 |= CM0 | CAP | SCS | CCIE;
         TA0CCTL1 |= OUTMOD_6;
@@ -46,7 +46,7 @@ void timerA0Init(double freq, double nSamples){
 #pragma vector = TIMER0_A1_VECTOR
 __interrupt void TIMERA0_ISR(void){
 
-    //sampleT = 1;
+    sampleT = 1;
 
     // clear interrupt flags
     TA0CTL &= ~TAIFG;
