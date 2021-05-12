@@ -70,7 +70,7 @@ void dacWriteWord(unsigned int dacWord, unsigned int dacCtrl){
 
 	CS_B_ASSERT; 							//	 CS_B LOW
 
-	dacCtrl |= DAC_CFG_GA;
+	//dacCtrl |= DAC_CFG_GA;
 
 	dacWord |= dacCtrl;						// add dacCtrl to MSNibble of dacWord
 

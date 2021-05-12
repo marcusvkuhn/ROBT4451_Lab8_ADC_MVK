@@ -19,7 +19,8 @@ void timerA0Init(double freq);
 long int speedCalc,
     numEdges,
     pulseStart,
-    pulseDelta;
+    pulseDelta,
+    sampleT;
 
 
 #endif /* TIMERA0_H_ */

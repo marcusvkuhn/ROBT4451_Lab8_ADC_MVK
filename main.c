@@ -18,13 +18,13 @@
 #include "ucsControl.h"
 #include "mcp4921Dac.h"
 #include "usciUart.h"
-#include "waveformGenerator.h"
+//#include "waveformGenerator.h"
 #include "timerA0.h"
 #include "adc12.h"
 
 
 #define dcoFreq 20							//MHz.
-#define sclkDiv 1							//SPI sclk divide. SCLK MAX to the DAC is 20MHz.
+#define sclkDiv 2							//SPI sclk divide. SCLK MAX to the DAC is 20MHz.
 											// sclkDiv will slow down transfer rate to DAC
 
 #define DAC_TST_WORD 0xBF8
@@ -48,7 +48,6 @@ int main(void) {
     WDTCTL = WDTPW | WDTHOLD;					// Stop watchdog timer
 
     /*********Set clock frequency*********************************************/
-    //unsigned char testPass = 1;
     ucsSelSource(1,1,1,1);
     oscFail = ucsDcoFreqSet (dcoFreq, 2, 1);			//set sclk to dcoFreq
     if (oscFail)

@@ -42,15 +42,12 @@ void adc12Cfg(const char * vref, char sampMode, char convTrigger, char adcChanne
     if (strcmp(vref, "3V3"))	{
 		ADC12MCTL0 |= (ADC12INCH_0 + ADC12SREF_1);		// select Analog Channel Input A0.  select VR+ = VREF+
 		REFCTL0 |= (REFMSTR + REFON);					//  enable reference control. Use REF module registers.
-		if (!strcmp(vref, "1V5")){
+		if (!strcmp(vref, "1V5"))
 			REFCTL0 |= REFVSEL_0;
-		}
-		else if(!strcmp(vref, "2V0")){
+		else if(!strcmp(vref, "2V0"))
 			REFCTL0 |= REFVSEL_1;
-		}
-		else if(!strcmp(vref, "2V5")){
+		else if(!strcmp(vref, "2V5"))
 			REFCTL0 |= REFVSEL_2;
-		}
     }
     else if (!strcmp(vref, "3V3"))	{				//   VR+ = AVCC+ and not VREF+
 		ADC12MCTL0 |= (ADC12INCH_0 + ADC12SREF_0);	// select Analog Channel Input A0.
@@ -58,17 +55,14 @@ void adc12Cfg(const char * vref, char sampMode, char convTrigger, char adcChanne
     }
 
 	// Setup Trigger and sample mode
-    if(convTrigger){
+    if(convTrigger)
     	ADC12CTL1 |= ADC12SHS_1;					// select timer
-    }
-    else{
+    else
     	ADC12CTL1 |= ADC12SHS_0;					// select SW bit
-    }
 
-    if (sampMode) {
-       	ADC12CTL1  |= ADC12SHP;						// extended mode. SAMPCON follows the trigger signal width
-       	// SET ADC12SHT1,0 IN ADC12CTL0
-    } else
+    if (sampMode)
+       	ADC12CTL1  |= ADC12SHP;						// extended mode. SAMPCON follows the trigger signal width // SET ADC12SHT1,0 IN ADC12CTL0
+       	else
        	ADC12CTL1  &= ~ADC12SHP;					// pulse sampling sampling. SAMPCON will be controlled by ADC12SHT1x, ADC12SHT10x. Bits Not implemented here.
 
     ADC12CTL0 |= ADC12SHT0_3;                       // 32 ADC12CLK cycles for sampling
@@ -77,12 +71,10 @@ void adc12Cfg(const char * vref, char sampMode, char convTrigger, char adcChanne
     ADC12CTL1 |= ADC12CONSEQ_2;      				// Repeated Single Channel
     ADC12CTL2 |= ADC12RES_2;						// 12-Bit Resolution
 
-
     ADC12IE   |= BIT0;                         		// Enable interrupt
     ADC12CTL0 |= ADC12ENC;							// Enable Conversion
 
-    timerA0Init(5000);
-
+    timerA0Init(30000);
 }
 
 /************************************************************************************

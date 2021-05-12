@@ -1,7 +1,9 @@
 #include <msp430.h>
 
 #include "timerA0.h"
-#include "waveformGenerator.h"
+//#include "waveformGenerator.h"
+
+
 /*
  * timerA0.c
  *
@@ -32,9 +34,9 @@ void timerA0Init(double freq){
 
         div = 20000000/(freq);
 
-        TA0CCR0 =  (int)div + 1;
+        TA0CCR0 =  (int)div - 1;
 
-        TA0CCR1 = 10;
+        TA0CCR1 = 20;
         // Capture on L->H & H->L: 11b | capture mode: 1b | Sync to SMCLK | choose CCI1A
         //TA0CCTL1 |= CM0 | CAP | SCS | CCIE;
         TA0CCTL1 |= OUTMOD_6;
